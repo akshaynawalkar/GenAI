@@ -44,7 +44,46 @@ license: creativeml-openrail-m
 
 <Gallery />
 
+**The model is still in the training phase. This is not the final version and may contain artifacts and perform poorly in some cases.**
 
+## Model description 
+
+**prithivMLmods/F-Meme**
+
+Image Processing Parameters 
+
+| Parameter                 | Value  | Parameter                 | Value  |
+|---------------------------|--------|---------------------------|--------|
+| LR Scheduler              | constant | Noise Offset              | 0.03   |
+| Optimizer                 | AdamW  | Multires Noise Discount   | 0.1    |
+| Network Dim               | 64     | Multires Noise Iterations | 10     |
+| Network Alpha             | 32     | Repeat & Steps           | 20 & 2200 |
+| Epoch                     | 10   | Save Every N Epochs       | 1     |
+
+    Labeling: florence2-en(natural language & English)
+    
+    Total Images Used for Training : 10
+
+## Best Dimensions
+
+- 768 x 1024 (Best)
+- 1024 x 1024 (Default)
+    
+## Setting Up
+```python
+import torch
+from pipelines import DiffusionPipeline
+
+base_model = "black-forest-labs/FLUX.1-dev"
+pipe = DiffusionPipeline.from_pretrained(base_model, torch_dtype=torch.bfloat16)
+
+lora_repo = "prithivMLmods/F-Meme"
+trigger_word = "meme"  
+pipe.load_lora_weights(lora_repo)
+
+device = torch.device("cuda")
+pipe.to(device)
+```
 ## Trigger words
 
 You should use `meme` to trigger the image generation.
